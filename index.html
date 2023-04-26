@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en" style = 'background-color:#3C3D41 !important;'>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" href="heatMap.css">
+    <link rel="stylesheet" href="bootStrap.css">
+    <title>Covidemic - Covid-19 Updates</title>
+</head>
+<body class = 'body' style = 'background-color:#3C3D41 !important;'>
+
+    <div class = "col-lg-12" style = "width:100%;height:7%; padding-bottom:0%;background-color: black;">
+        <h1 style = "text-align: center; font-family: monospace; font-size: 30px; opacity: 1; padding-top: 20px; color: white">
+            <img style="height: 40px;" src="images/Spotify.png"> Spotify
+        </h1>
+        
+    </div>
+
+    <div class = 'container-fluid' style = 'width:100%; height:91%' id = "DashboardContainer">
+        <div class = "row no-gutters" style = "width:100%;height:100%; max-width:100%; padding-top:0.5%; flex-wrap: wrap" id="DashRow">
+            <div class = "col-md-2" id = "divBoxtopworld_race">
+                <!-- Top 6 graph -->
+                <div class = 'card' style = 'height:25%;width:100%;background : #2C2C2C;margin-bottom: 3%;' id = 'top6Div'>
+                    <svg style = 'padding-top:3%;' height="100%" width="100%" id = "Top6" class = 'zulu'></svg>
+                </div>
+                <!-- World Race graph -->
+                <div class = 'card' style = 'height:50%; background : #2C2C2C;margin-bottom: 3%;' id = 'worldRaceDiv'>
+                    <svg width="100%" height="100%" id = "worldRace" class = 'charlie'></svg>
+                </div>
+                <!-- Percent infectionstatus graph -->
+                <div class = 'card' style = 'height:24%; background : #2C2C2C' id = 'statusDiv'>
+                    <svg width="100%" height="100%" id = "statusNode" class = 'charlie'></svg>
+                </div>
+            </div>
+            
+            <div style = 'width: 0.7%'></div>
+
+            <div class = "col-md-5" style="min-width:25%;" id = "divBox">
+                <!-- World map -->
+                <div class = 'card' style = 'height:49.9%;background : #2C2C2C;margin-bottom: 1.5%;' id = 'nodeDiv'>
+                        <svg id = "node" class = 'bravo'></svg>
+                    <div class = 'aboveMap'>
+                        <center style='padding-top:2%; padding-bottom:0%;'> 
+                            <text style = 'color:white;'>Click to visualize graphs per country</text>
+                            <button type="button" class="btn btn-primary btn-block" id = 'resetButton' style = "width:25%; background-color:transparent; font-size:65%; visibility: hidden" onclick="countrySpecificHist('all');document.getElementById('resetButton').style.visibility= 'hidden'">
+                                Reset</button>
+                        </center>
+                    </div>
+                </div>
+                <!-- Latest cases histogram -->
+                <div class = 'card' style = 'height:49.8%; background: #2C2C2C' id = 'latestCaseDiv'>
+                    <svg height ='100%' width="100%" id = "latestCasesNode" class = 'bravo'></svg>                   
+                </div>
+            </div>
+
+            <div style = 'width: 0.7%'></div>
+            
+            <div class = "col-md-4" style="min-width:40%;" id = "divBoxHist">
+                <!-- Daily histogram node -->
+                <div class = 'card' style = 'height:49.9%;background : #2C2C2C;margin-bottom: 1.5%;' id = 'histogramDiv'>
+                    <svg height =100% width="100%" id = "histogramNode" class = 'alpha'></svg>
+                </div>
+                <!-- Daily aggregate line graph -->
+                <div class = 'card' style = 'height:49.8%; background: #2C2C2C;' id = 'lineDiv'>
+                    <svg height ="100%" width="100%" id = "lineNode"></svg>
+                </div>
+            </div>
+        </div>
+        
+    </div>
+    <script>
+        // if(document.documentElement.scrollHeight <= document.documentElement.offsetWidth){
+            //first column
+            document.getElementById("Top6").style.height = (document.documentElement.scrollHeight * 0.26) + "px"
+            document.getElementById("worldRace").style.height = (document.documentElement.scrollHeight * 0.52) + "px"
+            document.getElementById("statusNode").style.height = (document.documentElement.scrollHeight * 0.1) + "px"
+
+            //second column
+            document.getElementById("node").style.height = (document.documentElement.scrollHeight * 0.40) + "px"
+            document.getElementById("latestCasesNode").style.height = (document.documentElement.scrollHeight * 0.425) + "px"
+
+            //third column
+            document.getElementById("histogramNode").style.height = (document.documentElement.scrollHeight * 0.468) + "px"
+            document.getElementById("lineNode").style.height = (document.documentElement.scrollHeight * 0.425) + "px"
+
+        // }
+        if(document.documentElement.scrollHeight > document.documentElement.offsetWidth){
+            document.getElementById("Top6").style.height = (380) + "px"
+            document.getElementById("worldRace").style.height = (490) + "px"
+            document.getElementById("statusNode").style.height = (196) + "px"
+            document.getElementById("statusNode").style.height = (196) + "px"
+
+        }
+
+    </script>
+
+    <script src="https://d3js.org/d3.v4.min.js"></script>
+    <script src="https://d3js.org/queue.v1.min.js"></script>
+    <!-- <script src="https://d3js.org/topojson.v1.min.js"></script> -->
+    <!-- <script src="https://unpkg.com/topojson-simplify@3"></script> -->
+    <!-- <script src="topojson-simplify.min.js"></script> -->
+    <script src="js/d3-tip.js"></script>
+    <script type="text/javascript" src="js/histogram.js"></script>
+    <script type="text/javascript" src="js/heatMap.js"></script>
+    <script src="https://unpkg.com/topojson-client@3"></script>
+    <script src="https://unpkg.com/topojson@3.0.0/dist/topojson.min.js"></script>
+    <script>
+
+    </script>
+    <script>
+
+        heatMap();
+        countrySpecificHist('all');
+
+        var w = window.innerWidth;
+        var h = window.innerHeight;
+        window.addEventListener("resize", function(event){
+            var new_w = window.innerWidth;
+            var new_h = window.innerHeight;
+
+            if(Math.abs(w*h - new_w*new_h) > 100000){
+                heatMap();
+            }
+
+        });
+
+        function removeElementsByClass(className){
+            var elements = document.getElementsByClassName(className);
+            while(elements.length > 0){
+                elements[0].parentNode.removeChild(elements[0]);
+            }
+        }
+
+        //Setting height values 
+    </script>
+    <!-- <script type="text/javascript" src="dataFetch.js"></script> -->
+
+    <style>
+        rect.zoom-panel {
+          cursor: move;
+          fill:#2d3642;
+          pointer-events: all;
+        }
+        
+        .bar {
+          fill: steelblue;
+        }
+        
+        .line {
+                fill: none;
+                stroke: steelblue;
+                stroke-width: 1.5px;
+                }
+
+        .line_recovered {
+                fill: none;
+                stroke: steelblue;
+                stroke-width: 1.5px;
+                }
+
+        .line_active {
+                fill: none;
+                stroke: steelblue;
+                stroke-width: 1.5px;
+                }
+
+        .line_deaths {
+                fill: none;
+                stroke: steelblue;
+                stroke-width: 1.5px;
+                }
+        .zoom {
+            cursor: move;
+            fill: none;
+            pointer-events: all;
+        }
+        /* .overlay {
+            position: absolute;
+            background: rgba(100,100,100,0);
+            top:0px;
+            bottom:0px;
+            left:0px;
+            right:0px;
+        } */
+/*         
+        .col-md-4 hist{
+
+            @media screen and  (max-width: 1639px){
+                    min-width: 30%;
+            }  
+
+            @media screen and (min-width:900px) and (max-width: 1400px){
+                    min-width: 0%;
+                
+            }   
+        } */
+        html, body {
+            height: 100%;
+        }
+        .fill-height {
+            min-height: 100%;
+            height:auto !important; /* cross-browser */
+            height: 100%; /* cross-browser */
+        }
+
+
+    </style>
+</body>
+
+</html>
