@@ -5,7 +5,7 @@ function generate_stats_by_country(data, country_ids) {
 
     let counters = ["#", "Track", "Album", "Uri", "Country", "Country ID"]
     let dictionaries = ['Key', 'Album Type', 'Artist Type']
-    let sets = ['Artist']
+    let sets = ['Artist', 'Genre']
 
     country_ids.forEach(function (d) {
         cols.forEach(function (col) {
@@ -34,9 +34,6 @@ function generate_stats_by_country(data, country_ids) {
                 }
             }
             else if (sets.includes(col)) {
-                // console.log(d['Country ID'])
-                // console.log(col);
-                // console.log(typeof statsById[d['Country ID'] + col]);
                 statsById[d['Country ID'] + col].add(d[col]);
             } else if (counters.includes(col)) {
                 statsById[d['Country ID'] + col] += 1;
@@ -69,7 +66,7 @@ function generate_stats_by_country(data, country_ids) {
     return statsById;
 }
 
-function heatMap() {
+function heatMap(filter_type, filter) {
 
     var svg = d3.selectAll('#node').attr('width', document.getElementById('nodeDiv').offsetWidth);
     //Using this selection to update the SVG everytime the function is called
@@ -89,10 +86,10 @@ function heatMap() {
             return "<strong>Country: </strong><span class='details'>" + d.properties.name + "<br></span>"
                 + "<strong>Tracks: </strong><span class='details'>" + d["Track"] + "<br></span>"
                 + "<strong>Artists: </strong><span class='details'>" + format(d.Artist.size) + "<br></span>"
-                // + "<strong>Genres: </strong><span class='details'>" + format(d.Genre.size) + "<br></span>"
+                + "<strong>Genres: </strong><span class='details'>" + format(d.Genre.size) + "<br></span>"
         })
 
-    var margin = { top: 0, right: 0, bottom: 0, left: 10 }, s
+    var margin = { top: 0, right: 0, bottom: 0, left: 10 },
     width = document.getElementById('nodeDiv').offsetWidth - margin.left - margin.right,
         height = document.getElementById('nodeDiv').offsetHeight - margin.top - margin.bottom;
 
@@ -154,7 +151,30 @@ function heatMap() {
 
         let cols = data.columns;
 
-        var statsById = generate_stats_by_country(data, country_ids);
+        let filtered_data = Array()
+
+        if (filter_type == 'Range') {
+            filter_attribute = filter[0];
+            filter_threshold = filter[1];
+            for (let i = 0; i < data.length; i++) {
+                if (data[i][filter_attribute] >= filter_threshold) {
+                    filtered_data.push(data[i])
+                }
+            }
+        }
+        else if (filter_type != 'None') {
+            for (let i = 0; i < data.length; i++) {
+                if (data[i][filter_type] == filter) {
+                    filtered_data.push(data[i])
+                }
+            }
+        } else {
+            filtered_data = data;
+        }
+        
+        filtered_data.columns = data.columns;
+
+        var statsById = generate_stats_by_country(filtered_data, country_ids);
 
         // console.log(statsById);
 
@@ -171,7 +191,7 @@ function heatMap() {
             .data(final_topology_data_simplified)
             .enter().append("path")
             .attr("d", path)
-            .style("fill", function (d) { return color(statsById[d.id + 'Artist'].size * 1976284.58498 /*127097.102186*/); })
+            .style("fill", function (d) { return color(statsById[d.id + 'Track'] * 127097.102186); })
             .style('stroke', 'white')
             .style('stroke-width', 0.5)
             .style("opacity", 1)
@@ -199,13 +219,11 @@ function heatMap() {
                     .duration(200)
                     .style('opacity', 0.8);
 
-                countrySpecificHist(d.properties.name);
-                // lineGraph(d.properties.name);
-                // latestCases(d.properties.name);
-                // worldRace(d.properties.name);
-                // worldPercent(d.properties.name);
-
-                // d3.selectAll('.arrow').attr('visibility','visible')
+                // heatMap('Country', d.properties.name);
+                artistBarChart('Country', d.properties.name);
+                genreDonut('Country', d.properties.name);
+                treemap('Country', d.properties.name);
+                parallel_coordinates_plot('Country', d.properties.name, 0);
 
                 document.getElementById('resetButton').style.visibility = 'visible'
             })
@@ -220,28 +238,7 @@ function heatMap() {
 
         svg.append("path")
             .datum(topojson.mesh(final_topology_data_simplified, function (a, b) { return a.id !== b.id; }))
-            // .datum(topojson.mesh(data.features, function(a, b) { return a !== b; }))
             .attr("class", "names")
             .attr("d", path);
-
-        // var myimage = svg.append('image')
-        //     .attr('xlink:href', './images/backArrow.png')
-        //     .attr('class', 'arrow')
-        //     .attr('width', 40)
-        //     .attr('height', 200)
-        //     .attr('x', 0)
-        //     .attr('y', 0.9*height)
-        //     .on('mouseover', function(d,i){
-        //         d3.select(this).style('opacity', 0.6)
-        //     })
-        //     .on('mouseout', function(d,i){
-        //         d3.select(this).style('opacity', 1)
-        //     })
-        //     .on('click', function(d,i){
-        //         lineGraph('all')
-        //         countrySpecificHist('all')
-        //         d3.select(this).attr('visibility','hidden')
-        //     })
-        //     .attr('visibility','hidden')
     }
 }

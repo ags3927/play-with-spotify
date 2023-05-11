@@ -2,6 +2,10 @@ import numpy as np
 import pandas as pd
 import json
 import requests
+from requests.structures import CaseInsensitiveDict
+from tqdm import tqdm
+
+TOKEN = "BQCPv83AUF-vSd_aZbyTvpv543wfRmeZlWSDlN9z1OBLHS8laFEbdMASJIouRmI5YHa4CF6-YfXMJVSA8cADr1swk16bYfonNht545APQ5-Yezb8drub"
 
 def add_country_id():
     data = pd.read_csv('new_data.csv', low_memory=False)
@@ -36,46 +40,79 @@ def get_columns():
 def get_access_token():
     url = "https://accounts.spotify.com/api/token"
     
-    client_id = '3e9cd073ff5a4668a3b6ed5c61476dd3'
-    client_secret = '89ec56a2a8214360878b7d7294ed94ed'
+    headers = CaseInsensitiveDict()
+    headers["Content-Type"] = "application/x-www-form-urlencoded"
     
-    headers = {
-        'Authorization': 'Basic ' + client_id + ':' + client_secret
-    }
+    client_id = '9ea1a0e8432c41179cc0f32f00dd5a94'
+    client_secret = '02ee6e7442214ddf9d3d0b45ce13de95'
     
-    form = {
-        'grant_type': 'client_credentials'
-    }
-    json = True
+    data = "grant_type=client_credentials&client_id=9ea1a0e8432c41179cc0f32f00dd5a94&client_secret=02ee6e7442214ddf9d3d0b45ce13de95"
     
-    r = requests.post(url, headers=headers)
+    resp = requests.post(url, headers=headers, data=data)
 
-    print(r)
+    return resp.json()
     
 
-def get_genre():
+def get_genreDonut():
+    response = get_access_token()
+    token = response['access_token']
+    # token = TOKEN
+    
     df = pd.read_csv('data_final.csv')
-    uris = df['Uri']
+    uris = df['Url Spotify']
+    unique_uris = df['Url Spotify'].unique().tolist()
     
-    request_url = 'https://api.spotify.com/v1/tracks/'
+    request_url = 'https://api.spotify.com/v1/artists'
     
-    for uri in uris:
-        id = uri.split(':')[2]
+    headers = CaseInsensitiveDict()
+    headers["Authorization"] = "Bearer " + token
+    
+    artist_ids = []
+    
+    for uri in unique_uris:
+        id = uri.split('/')[-1]
+        artist_ids.append(id)
+    
+    artists_data = []
+    
+    for i in tqdm(range(0, len(artist_ids), 50)):
+        artist_id_batch = artist_ids[i:min(i+50,len(artist_ids))]
+        # print(len(artist_id_batch))
+        artist_id_batch_str = ','.join(artist_id_batch)
+        res = requests.get(request_url, params={'ids': artist_id_batch_str}, headers=headers)
+        json_data = res.json()
+        artists_data = artists_data + json_data['artists']
+    
+    artist_id_to_genres = {}
+    
+    for artist_data in artists_data:
+        artist_id_to_genres[artist_data['id']] = artist_data['genres']
+        if (type(artist_data['genres']) == bool):
+            artist_id_to_genres[artist_data['id']] = ['default']
+        elif (len(artist_data['genres']) == 0):
+            artist_id_to_genres[artist_data['id']] = ['default']
+            
         
-        res = requests.get(request_url + '11dFghVXANMlKmJXsNCbNl', headers={
-            'Authorization': 'Basic eeb2ab9adcdf406e966a1261d4cc8cf8'
-        })
-        
-        data = res.json()
-        
-        print(data)
-        
-        break
+    # print(len(artist_id_to_genres))
 
+    genres = []
+    for uri in uris:
+        genre = None
+        id = uri.split('/')[-1]
+        if id not in artist_id_to_genres.keys():
+            print('wtf')
+            genre = 'default'
+        else:
+            genre = artist_id_to_genres[id][0]
+        genres.append(genre)
+    
+    df['Genre'] = genres
+    df.to_csv('data_with_genre.csv')
 
 def main():
-    get_access_token()
+    get_genreDonut()
 
     
 if __name__ == "__main__":
     main()
+    

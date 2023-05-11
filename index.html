@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html lang="en" style = 'background-color:#3C3D41 !important;'>
+<html lang="en" style='background-color:#3C3D41 !important;'>
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -7,89 +8,126 @@
     <link rel="stylesheet" href="heatMap.css">
     <link rel="stylesheet" href="bootStrap.css">
 </head>
-<body class = 'body' style = 'background-color:#3C3D41 !important;'>
 
-    <div class = "col-lg-12" style = "width:100%;height:7%; padding-bottom:0%;background-color: black;">
-        <h1 style = "text-align: center; font-family: monospace; font-size: 30px; opacity: 1; padding-top: 20px; color: white">
-            <img style="height: 40px;" src="images/Spotify.png"> Spotify
+<body class='body' style='background-color:#3C3D41 !important;'>
+
+    <div class="col-lg-12" style="width:100%; height: 5%; padding-bottom:0%; background-color: black;">
+        <h1
+            style="text-align: center; font-family: monospace; font-size: 20px; opacity: 1; padding-top: 8px; color: white">
+            <img style="height: 15px;" src="images/Spotify.png"> Spotify
         </h1>
-        
+
     </div>
 
-    <div class = 'container-fluid' style = 'width:100%; height:91%' id = "DashboardContainer">
-        <div class = "row no-gutters" style = "width:100%;height:100%; max-width:100%; padding-top:0.5%; flex-wrap: wrap" id="DashRow">
-            <div class = "col-md-2" id = "divBoxtopworld_race">
-                <!-- Top 6 graph -->
-                <div class = 'card' style = 'height:25%;width:100%;background : #2C2C2C;margin-bottom: 3%;' id = 'top6Div'>
-                    <svg style = 'padding-top:3%;' height="100%" width="100%" id = "Top6" class = 'zulu'></svg>
+    <div class='container-fluid' style='width:100%; height:100%' id="DashboardContainer">
+        <div class="row no-gutters" style="width:100%; height:100%; max-width:100%; flex-wrap: wrap" id="DashRow">
+            <div class="col-md-2" id="divBoxtopworld_race">
+                <!-- Attribute Selector -->
+                <div class='card' style='height:25%; width:100%; background : #2C2C2C; margin-bottom: 2%;'
+                    id='sliderDiv'>
+
+                    <form>
+                        <div class="form-group mx-auto" style="width: 85%">
+                            <div class="row">
+                                <div class="col-12">
+                                    <h5 class="mt-4 text-white">Select Attribute Threshold</h5>
+                                </div>
+                                <div class="col-7">
+                                    <select class="form-control mx-auto mt-2" id="attributeSelect" onchange="selectorOnClick">
+                                        <option value="Tempo">Tempo</option>
+                                        <option value="Energy">Energy</option>
+                                        <option value="Danceability">Danceability</option>
+                                        <option value="Loudness">Loudness</option>
+                                        <option value="Liveness">Liveness</option>
+                                        <option value="Valence">Valence</option>
+                                        <option value="Acousticness">Acousticness</option>
+                                        <option value="Speechiness">Speechiness</option>
+                                    </select>
+                                </div>
+                                <div class="col-5">
+                                    <button id="sliderValueDisplay" class="btn btn-text disabled mx-auto text-white mt-2 px-0">40</button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group mx-auto" style="width: 85%">
+                            <input type="range" class="form-control-range" id="attributeRange" min="0" max="100" step="1">
+                        </div>
+                    </form>
+
+                    <button id="updateButton" class="btn btn-success mx-auto" style="width: 85%">
+                        Update
+                    </button>
+
                 </div>
-                <!-- World Race graph -->
-                <div class = 'card' style = 'height:50%; background : #2C2C2C;margin-bottom: 3%;' id = 'worldRaceDiv'>
-                    <svg width="100%" height="100%" id = "worldRace" class = 'charlie'></svg>
+
+                <!-- Tree map -->
+                <div class='card' style='height:43.5%; background : #2C2C2C; margin-bottom: 3%;' id='treemapDiv'>
+                    <svg width="100%" height="100%" id="treemap" class='charlie'></svg>
                 </div>
                 <!-- Percent infectionstatus graph -->
-                <div class = 'card' style = 'height:24%; background : #2C2C2C' id = 'statusDiv'>
-                    <svg width="100%" height="100%" id = "statusNode" class = 'charlie'></svg>
+                <div class='card' style='height:24%; background : #2C2C2C' id='statusDiv'>
+                    <svg width="100%" height="100%" id="statusNode" class='charlie'></svg>
                 </div>
             </div>
-            
-            <div style = 'width: 0.7%'></div>
 
-            <div class = "col-md-5" style="min-width:25%;" id = "divBox">
+            <div style='width: 0.7%'></div>
+
+            <div class="col-md-5" style="min-width:25%;" id="divBox">
                 <!-- World map -->
-                <div class = 'card' style = 'height:49.9%;background : #2C2C2C;margin-bottom: 1.5%;' id = 'nodeDiv'>
-                        <svg id = "node" class = 'bravo'></svg>
-                    <div class = 'aboveMap'>
-                        <center style='padding-top:2%; padding-bottom:0%;'> 
-                            <text style = 'color:white;'>Click to visualize graphs per country</text>
-                            <button type="button" class="btn btn-primary btn-block" id = 'resetButton' style = "width:25%; background-color:transparent; font-size:65%; visibility: hidden" onclick="countrySpecificHist('all');document.getElementById('resetButton').style.visibility= 'hidden'">
+                <div class='card' style='height:47%; background: #2C2C2C; margin-bottom: 0.5%;' id='nodeDiv'>
+                    <svg id="node" class='bravo'></svg>
+                    <div class='aboveMap'>
+                        <center style='padding-top:2%; padding-bottom:0%;'>
+                            <button type="button" class="btn btn-primary btn-block" id='resetButton'
+                                style="width:25%; background-color:transparent; font-size: 65%; visibility: hidden"
+                                onclick="heatMap('None', 'all');artistBarChart('None', 'all');genreDonut('None', 'all');treemap('None', 'all');parallel_coordinates_plot('None', 'all', 0);document.getElementById('resetButton').style.visibility= 'hidden'">
                                 Reset</button>
                         </center>
                     </div>
                 </div>
-                <!-- Latest cases histogram -->
-                <div class = 'card' style = 'height:49.8%; background: #2C2C2C' id = 'latestCaseDiv'>
-                    <svg height ='100%' width="100%" id = "latestCasesNode" class = 'bravo'></svg>                   
+                <!-- Artist bar chart -->
+                <div class='card' style='height:47%; background: #2C2C2C' id='genreDiv'>
+                    <svg height='100%' width="100%" id="genreNode" class='bravo'></svg>
                 </div>
             </div>
 
-            <div style = 'width: 0.7%'></div>
-            
-            <div class = "col-md-4" style="min-width:40%;" id = "divBoxHist">
-                <!-- Daily histogram node -->
-                <div class = 'card' style = 'height:49.9%;background : #2C2C2C;margin-bottom: 1.5%;' id = 'histogramDiv'>
-                    <svg height =100% width="100%" id = "histogramNode" class = 'alpha'></svg>
+            <div style='width: 0.7%'></div>
+
+            <div class="col-md-4" style="min-width: 40%;" id="divBoxHist">
+                <!-- Genre donut chart -->
+                <div class='card' style='height: 47%; background: #2C2C2C; margin-bottom: 0.5%;' id='histogramDiv'>
+                    <svg height=100% width="100%" id="histogramNode" class='alpha'></svg>
                 </div>
-                <!-- Daily aggregate line graph -->
-                <div class = 'card' style = 'height:49.8%; background: #2C2C2C;' id = 'lineDiv'>
-                    <svg height ="100%" width="100%" id = "lineNode"></svg>
+                <!-- Numerical attributes parallel coordinates plot -->
+                <div class='card' style='height: 47%; background: #2C2C2C;' id='pcDiv'>
+                    <svg height="100%" width="100%" id="pcNode"></svg>
                 </div>
             </div>
         </div>
-        
+
     </div>
     <script>
         // if(document.documentElement.scrollHeight <= document.documentElement.offsetWidth){
-            //first column
-            document.getElementById("Top6").style.height = (document.documentElement.scrollHeight * 0.26) + "px"
-            document.getElementById("worldRace").style.height = (document.documentElement.scrollHeight * 0.52) + "px"
-            document.getElementById("statusNode").style.height = (document.documentElement.scrollHeight * 0.1) + "px"
+        //first column
+        // document.getElementById("slider").style.height = (document.documentElement.scrollHeight * 0.26) + "px"
+        document.getElementById("treemap").style.height = (document.documentElement.scrollHeight * 0.52) + "px"
+        document.getElementById("statusNode").style.height = (document.documentElement.scrollHeight * 0.1) + "px"
 
-            //second column
-            document.getElementById("node").style.height = (document.documentElement.scrollHeight * 0.40) + "px"
-            document.getElementById("latestCasesNode").style.height = (document.documentElement.scrollHeight * 0.425) + "px"
+        //second column
+        document.getElementById("node").style.height = (document.documentElement.scrollHeight * 0.40) + "px"
+        document.getElementById("genreNode").style.height = (document.documentElement.scrollHeight * 0.425) + "px"
 
-            //third column
-            document.getElementById("histogramNode").style.height = (document.documentElement.scrollHeight * 0.468) + "px"
-            document.getElementById("lineNode").style.height = (document.documentElement.scrollHeight * 0.425) + "px"
+        //third column
+        document.getElementById("histogramNode").style.height = (document.documentElement.scrollHeight * 0.468) + "px"
+        document.getElementById("pcNode").style.height = (document.documentElement.scrollHeight * 0.425) + "px"
 
         // }
-        if(document.documentElement.scrollHeight > document.documentElement.offsetWidth){
-            document.getElementById("Top6").style.height = (380) + "px"
-            document.getElementById("worldRace").style.height = (490) + "px"
+        if (document.documentElement.scrollHeight > document.documentElement.offsetWidth) {
+            document.getElementById("slider").style.height = (380) + "px"
+            document.getElementById("treemap").style.height = (490) + "px"
             document.getElementById("statusNode").style.height = (196) + "px"
             document.getElementById("statusNode").style.height = (196) + "px"
-
         }
 
     </script>
@@ -100,6 +138,11 @@
     <!-- <script src="https://unpkg.com/topojson-simplify@3"></script> -->
     <!-- <script src="topojson-simplify.min.js"></script> -->
     <script src="js/d3-tip.js"></script>
+    <script type="text/javascript" src="js/index.js"></script>
+    <script type="text/javascript" src="js/slider.js"></script>
+    <script type="text/javascript" src="js/tree.js"></script>
+    <script type="text/javascript" src="js/parallel.js"></script>
+    <script type="text/javascript" src="js/donut.js"></script>
     <script type="text/javascript" src="js/histogram.js"></script>
     <script type="text/javascript" src="js/heatMap.js"></script>
     <script src="https://unpkg.com/topojson-client@3"></script>
@@ -109,24 +152,35 @@
     </script>
     <script>
 
-        heatMap();
-        countrySpecificHist('all');
+        heatMap('None', 'all');
+        artistBarChart('all');
+        genreDonut('None', 'all');
+        parallel_coordinates_plot('None', 'all', 0);
+        treemap('None', 'all');
+        sliderBox();
 
         var w = window.innerWidth;
         var h = window.innerHeight;
-        window.addEventListener("resize", function(event){
+
+        window.addEventListener("resize", function (event) {
             var new_w = window.innerWidth;
             var new_h = window.innerHeight;
 
-            if(Math.abs(w*h - new_w*new_h) > 100000){
+            if (Math.abs(w * h - new_w * new_h) > 100000) {
                 heatMap();
             }
 
         });
 
-        function removeElementsByClass(className){
+        selectorOnClick();
+                
+        document.getElementById("attributeSelect").addEventListener("change", selectorOnClick);
+        document.getElementById("attributeRange").addEventListener("change", sliderOnChange);
+        document.getElementById("updateButton").addEventListener("click", onUpdateClick);
+
+        function removeElementsByClass(className) {
             var elements = document.getElementsByClassName(className);
-            while(elements.length > 0){
+            while (elements.length > 0) {
                 elements[0].parentNode.removeChild(elements[0]);
             }
         }
@@ -137,43 +191,45 @@
 
     <style>
         rect.zoom-panel {
-          cursor: move;
-          fill:#2d3642;
-          pointer-events: all;
+            cursor: move;
+            fill: #2d3642;
+            pointer-events: all;
         }
-        
+
         .bar {
-          fill: steelblue;
+            fill: steelblue;
         }
-        
+
         .line {
-                fill: none;
-                stroke: steelblue;
-                stroke-width: 1.5px;
-                }
+            fill: none;
+            stroke: steelblue;
+            stroke-width: 1.5px;
+        }
 
         .line_recovered {
-                fill: none;
-                stroke: steelblue;
-                stroke-width: 1.5px;
-                }
+            fill: none;
+            stroke: steelblue;
+            stroke-width: 1.5px;
+        }
 
         .line_active {
-                fill: none;
-                stroke: steelblue;
-                stroke-width: 1.5px;
-                }
+            fill: none;
+            stroke: steelblue;
+            stroke-width: 1.5px;
+        }
 
         .line_deaths {
-                fill: none;
-                stroke: steelblue;
-                stroke-width: 1.5px;
-                }
+            fill: none;
+            stroke: steelblue;
+            stroke-width: 1.5px;
+        }
+
         .zoom {
             cursor: move;
             fill: none;
             pointer-events: all;
         }
+
         /* .overlay {
             position: absolute;
             background: rgba(100,100,100,0);
@@ -182,7 +238,7 @@
             left:0px;
             right:0px;
         } */
-/*         
+        /*         
         .col-md-4 hist{
 
             @media screen and  (max-width: 1639px){
@@ -194,16 +250,18 @@
                 
             }   
         } */
-        html, body {
+        html,
+        body {
             height: 100%;
         }
+
         .fill-height {
             min-height: 100%;
-            height:auto !important; /* cross-browser */
-            height: 100%; /* cross-browser */
+            height: auto !important;
+            /* cross-browser */
+            height: 100%;
+            /* cross-browser */
         }
-
-
     </style>
 </body>
 
