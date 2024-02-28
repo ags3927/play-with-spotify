@@ -42,6 +42,7 @@ function treemap(filter_type, filter) {
         11: "B"
     }
 
+
     let reverseKeyMap = {
         "C": 0,
         "C#": 1,
@@ -75,7 +76,7 @@ function treemap(filter_type, filter) {
             else if (filter_type == 'Range') {
                 filter_attribute = filter[0];
                 filter_threshold = filter[1];
-                if (d[filter_attribute] >= filter_threshold) {
+                if (Number(d[filter_attribute]) >= Number(filter_threshold)){
                     key_track_count[d['Key']] += 1
                 }
             } else {
@@ -178,7 +179,7 @@ function treemap(filter_type, filter) {
                 artistBarChart('Key', reverseKeyMap[d.data.name]);
                 genreDonut('Key', reverseKeyMap[d.data.name]);
                 // treemap('Key', reverseKeyMap[d.data.name]);
-                parallel_coordinates_plot('Key', reverseKeyMap[d.data.name], 0);
+                parallel_coordinates_plot('Key', reverseKeyMap[d.data.name]);
 
                 document.getElementById('resetButton').style.visibility = 'visible'
             })
@@ -196,8 +197,8 @@ function treemap(filter_type, filter) {
             .data(root.leaves())
             .enter()
             .append("text")
-            .attr("x", function (d) { return d.x0 + 3 })    // +10 to adjust position (more right)
-            .attr("y", function (d) { return d.y0 + 15 })    // +20 to adjust position (lower)
+            .attr("x", function (d) { return d.x0 + 3 })
+            .attr("y", function (d) { return d.y0 + 17 }) 
             .text(function (d) { return d.data.name })
             .attr("font-size", "15px")
             .attr("fill", "white")

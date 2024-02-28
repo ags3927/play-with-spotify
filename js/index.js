@@ -24,7 +24,7 @@ function selectorOnClick() {
 
 function sliderOnChange() {
     let sliderValue = document.getElementById("attributeRange").value;
-    document.getElementById('sliderValueDisplay').innerHTML = sliderValue;
+    document.getElementById('sliderValueDisplay').innerHTML = Number(sliderValue).toFixed(2);
 }
 
 function onUpdateClick() {
@@ -36,7 +36,7 @@ function onUpdateClick() {
     artistBarChart('Range', [selectedAttribute, sliderValue]);
     treemap('Range', [selectedAttribute, sliderValue]);
     genreDonut('Range', [selectedAttribute, sliderValue]);
-    parallel_coordinates_plot('Range', [selectedAttribute, sliderValue], 0);
+    parallel_coordinates_plot('Range', [selectedAttribute, sliderValue]);
 
     document.getElementById('resetButton').style.visibility = 'visible';
 }

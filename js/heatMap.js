@@ -117,6 +117,8 @@ function heatMap(filter_type, filter) {
         .attr('class', 'map')
         .append("g").attr('transform', 'translate(50,50)');
 
+
+
     // function zoomFn() {
     //     d3.select('#divBox').select('svg').select('g').attr('transform', 'translate(' + d3.event.transform.x + ',' + d3.event.transform.y + ') scale(' + d3.event.transform.k + ')');
     // }
@@ -157,7 +159,7 @@ function heatMap(filter_type, filter) {
             filter_attribute = filter[0];
             filter_threshold = filter[1];
             for (let i = 0; i < data.length; i++) {
-                if (data[i][filter_attribute] >= filter_threshold) {
+                if (Number(data[i][filter_attribute]) >= Number(filter_threshold)) {
                     filtered_data.push(data[i])
                 }
             }
@@ -223,7 +225,7 @@ function heatMap(filter_type, filter) {
                 artistBarChart('Country', d.properties.name);
                 genreDonut('Country', d.properties.name);
                 treemap('Country', d.properties.name);
-                parallel_coordinates_plot('Country', d.properties.name, 0);
+                parallel_coordinates_plot('Country', d.properties.name);
 
                 document.getElementById('resetButton').style.visibility = 'visible'
             })

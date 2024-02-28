@@ -4,6 +4,8 @@ import json
 import requests
 from requests.structures import CaseInsensitiveDict
 from tqdm import tqdm
+from sklearn.cluster import KMeans
+from sklearn.preprocessing import StandardScaler
 
 TOKEN = "BQCPv83AUF-vSd_aZbyTvpv543wfRmeZlWSDlN9z1OBLHS8laFEbdMASJIouRmI5YHa4CF6-YfXMJVSA8cADr1swk16bYfonNht545APQ5-Yezb8drub"
 
@@ -109,8 +111,30 @@ def get_genreDonut():
     df['Genre'] = genres
     df.to_csv('data_with_genre.csv')
 
+def kmeans_clustering():
+    df = pd.read_csv('data_final_old.csv')
+
+    features = [
+        'Tempo',
+        'Energy',
+        'Danceability',
+        'Loudness',
+        'Liveness',
+        'Valence',
+        'Acousticness',
+        'Speechiness'
+    ]
+
+    filtered_df = df[features]
+    scaled_df = pd.DataFrame(StandardScaler().fit_transform(filtered_df.values), index = filtered_df.index, columns = filtered_df.columns)
+    kmeans = KMeans(n_clusters=3, init='k-means++')
+    kmeans.fit(scaled_df)
+    labels = kmeans.labels_
+    df['Label'] = labels
+    df.to_csv('data_final.csv')
+
 def main():
-    get_genreDonut()
+    kmeans_clustering()
 
     
 if __name__ == "__main__":

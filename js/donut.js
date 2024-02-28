@@ -4,7 +4,7 @@ function genreDonut(filter_type, filter) {
     var margin = { top: 210, right: 100, bottom: 70, left: 0.5 * document_width },
         width = document.getElementById('genreDiv').offsetWidth - margin.left - margin.right,
         height = document.getElementById('genreDiv').offsetHeight - 50 - margin.bottom,
-        radius = Math.min(width, height) / 1.75;
+        radius = Math.min(width, height) / 1.4;
 
     d3.selectAll("#genreNode").selectAll('*').remove()
 
@@ -30,6 +30,16 @@ function genreDonut(filter_type, filter) {
 
     svg.call(tip);
 
+    
+    svg.append('text')
+        .attr('x', width - 300)
+        .attr('y', height/2 + 90)
+        .attr('text-anchor', 'middle')
+        .style("fill", "rgb(36,157,60)")
+        .attr("font-weight", "bolder")
+        .attr("font-size", "27px")
+        .text("Genre Donut Chart")
+
     // get the data
     d3.csv(`data_final.csv`, function (error, data) {
         unique_genres = [...new Set(data.map(item => item['Genre']))];
@@ -51,7 +61,7 @@ function genreDonut(filter_type, filter) {
             else if (filter_type == 'Range') {
                 filter_attribute = filter[0];
                 filter_threshold = filter[1];
-                if (d[filter_attribute] >= filter_threshold) {
+                if (Number(d[filter_attribute]) >= Number(filter_threshold)){
                     genre_track_count[d['Genre']] += 1
                 }
             } else {
@@ -155,7 +165,7 @@ function genreDonut(filter_type, filter) {
                 artistBarChart('Genre', d.data.key);
                 treemap('Genre', d.data.key);
                 // genreDonut('Genre', d.data.key);
-                parallel_coordinates_plot('Genre', d.data.key, 0);
+                parallel_coordinates_plot('Genre', d.data.key);
 
                 document.getElementById('resetButton').style.visibility = 'visible'
             })

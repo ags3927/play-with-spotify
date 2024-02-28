@@ -50,7 +50,7 @@ function artistBarChart(filter_type, filter) {
             else if (filter_type == 'Range') {
                 filter_attribute = filter[0];
                 filter_threshold = filter[1];
-                if (d[filter_attribute] >= filter_threshold) {
+                if (Number(d[filter_attribute]) >= Number(filter_threshold)) {
                     artist_track_count[d['Artist']] += 1
                 }
             } else {
@@ -131,6 +131,15 @@ function artistBarChart(filter_type, filter) {
             // .attr("font-weight", "bolder")
             .text("Track Count")
 
+        svg.append('text')
+            .attr('x', width / 2.1)
+            .attr('y', 25)
+            .attr('text-anchor', 'middle')
+            .style("fill", "rgb(36,157,60)")
+            .attr("font-weight", "bolder")
+            .attr("font-size", "27px")
+            .text("Top Artists Bar Chart")
+
         // y axis
         let yAxis = svg.append('g')
             .attr('class', 'y axis')
@@ -170,13 +179,13 @@ function artistBarChart(filter_type, filter) {
                     .transition()
                     .duration(200)
                     .style('opacity', 0.8);
-                console.log(d);
+                // console.log(d);
 
                 heatMap('Artist', d[0]);
                 // artistBarChart('Artist', d[0]);
                 genreDonut('Artist', d[0]);
                 treemap('Artist', d[0]);
-                parallel_coordinates_plot('Artist', d[0], 0);
+                parallel_coordinates_plot('Artist', d[0]);
 
                 document.getElementById('resetButton').style.visibility = 'visible'
             })
